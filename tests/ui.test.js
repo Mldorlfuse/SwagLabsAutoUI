@@ -92,22 +92,27 @@ test.describe("UI тесты @UI", () => {
 
         await webApp.inventoryPage.addToCartOneItem(countItems - 1);
         fieldsOfItem = await webApp.inventoryPage.getFieldsOfItem(countItems - 1);
+        await webApp.header.checkCountItems(1);
         await webApp.header.openShoppingCart();
 
         await webApp.cartPage.checkUrl(urls.cartPageUrl);
+        await webApp.header.checkCountItems(1);
         await webApp.cartPage.checkFieldsOfItem(fieldsOfItem);
         await webApp.cartPage.checkoutButtonClick();
 
         await webApp.checkoutInfoPage.checkUrl(urls.checkoutInfoPageUrl);
+        await webApp.header.checkCountItems(1);
         await webApp.checkoutInfoPage.fillAllInputs(checkoutData);
         await webApp.checkoutInfoPage.continueButtonClick();
 
         await webApp.checkoutFinishPage.checkUrl(urls.checkoutFinishPageUrl);
+        await webApp.header.checkCountItems(1);
         await webApp.checkoutFinishPage.checkAllFieldsItem(fieldsOfItem);
         await webApp.checkoutFinishPage.checkSubtotalPrice(fieldsOfItem.price);
         await webApp.checkoutFinishPage.finishButtonClick();
 
         await webApp.checkoutCompletePage.checkUrl(urls.checkoutCompletedPageUrl);
+        await webApp.header.checkCountItems(1);
         await webApp.checkoutCompletePage.checkAllCompleteTexts(checkoutCompleteDataFields);
         await webApp.checkoutCompletePage.backToProductButtonClick();
 
