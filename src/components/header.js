@@ -1,5 +1,6 @@
 import {expect} from "@playwright/test";
 import {urls} from "../data";
+import { allure } from "allure-playwright";
 
 export class Header {
     constructor(page) {
@@ -11,37 +12,53 @@ export class Header {
         this.countCart = this.page.locator('span[data-test="shopping-cart-badge"]');
     }
 
-    async checkTitle() {
-       await expect(this.title).toHaveText('Swag Labs');
-    }
-
     async openShoppingCart() {
-        await this.shoppingCart.click();
+        await allure.step(`Перейти в корзину`, async() => {
+            await this.shoppingCart.click();
+        })
     }
 
     async openMenu() {
-        await this.menu.click();
+        await allure.step(`Перейти в меню навигации`, async() => {
+            await this.menu.click();
+        })
+
     }
 
     async logout() {
-        await this.logoutButton.click();
+        await allure.step(`Нажать кнопку "Logout"`, async() => {
+            await this.logoutButton.click();
+        })
+
     }
 
     async checkLogout(url) {
-        await expect(this.page).toHaveURL(url);
+        await allure.step(`Проверить равен ли url адрес страницы url - ${url}`, async() => {
+            await expect(this.page).toHaveURL(url);
+        })
+
     }
 
     async fullPathLogout() {
-       await this.openMenu();
-       await this.logout();
-       await this.checkLogout(urls.registerPageUrl)
+        await allure.step(`Выход из аккаунта`, async() => {
+            await this.openMenu();
+            await this.logout();
+            await this.checkLogout(urls.registerPageUrl)
+        })
+
     }
 
     async checkCountCart(count) {
-        await expect(this.countCart).toHaveText(count.toString());
+        await allure.step(`Проверить отображается ли количество товаров - ${count} в иконке корзины`, async() => {
+            await expect(this.countCart).toHaveText(count.toString());
+        })
+
     }
 
     async checkEmptyCart() {
-        await expect(this.countCart).toHaveCount(0);
+        await allure.step(`Проверить что в иконке корзины не отображает количество товаров`, async() => {
+            await expect(this.countCart).toHaveCount(0);
+        })
+
     }
 }

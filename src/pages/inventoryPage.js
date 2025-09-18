@@ -1,4 +1,5 @@
 import {expect} from "@playwright/test";
+import { allure } from "allure-playwright";
 
 export class InventoryPage {
     constructor(page) {
@@ -13,17 +14,24 @@ export class InventoryPage {
     }
 
     async checkInventoryUrl(url) {
-        await expect(this.page).toHaveURL(url);
+        await allure.step(`Проверить равен ли url-адрес страницы url - ${url}`, async() => {
+            await expect(this.page).toHaveURL(url);
+        })
     }
 
     async addToCartOneItem(index) {
-        await expect (this.inventoryItemButtonAddToCart.nth(index)).toHaveText('Add to cart');
-        await this.inventoryItemButtonAddToCart.nth(index).click();
+        await allure.step(`Проверить что у элемента есть кнопка с текстом "Add to cart" и нажать ее`, async() => {
+            await expect (this.inventoryItemButtonAddToCart.nth(index)).toHaveText('Add to cart');
+            await this.inventoryItemButtonAddToCart.nth(index).click();
+        })
     }
 
     async removeFromCartOneItem(index) {
-        await expect (this.inventoryItemButtonAddToCart.nth(index)).toHaveText('Remove');
-        await this.inventoryItemButtonAddToCart.nth(index).click();
+        await allure.step(`Проверить что у элемента есть кнопка с текстом "Remove" и нажать ее`, async() => {
+            await expect (this.inventoryItemButtonAddToCart.nth(index)).toHaveText('Remove');
+            await this.inventoryItemButtonAddToCart.nth(index).click();
+        })
+
     }
 
     async getCountItems() {
@@ -35,15 +43,21 @@ export class InventoryPage {
     }
 
     async addToCartSomeItems(ArrItems){
-        for (let i = 0; i < ArrItems.length; i++) {
-            await this.addToCartOneItem(ArrItems[i]);
-        }
+        await allure.step(`Добавить случайное количество (${ArrItems.length}) элементов в корзину`, async() => {
+            for (let i = 0; i < ArrItems.length; i++) {
+                await this.addToCartOneItem(ArrItems[i]);
+            }
+        })
+
     }
 
     async removeFromCartSomeItems(ArrItems){
-        for (let i = 0; i < ArrItems.length; i++) {
-            await this.removeFromCartOneItem(ArrItems[i]);
-        }
+        await allure.step(`Удалить случайное количество (${ArrItems.length}) элементов из корзины`, async() => {
+            for (let i = 0; i < ArrItems.length; i++) {
+                await this.removeFromCartOneItem(ArrItems[i]);
+            }
+        })
+
     }
 
     async getFieldsOfItem(item){
@@ -54,38 +68,66 @@ export class InventoryPage {
         }
     }
 
+    async changeTheSelectorInOptions(select){
+        await allure.step(`Сменить сортировку на значение "${select}"`, async() => {
+            await this.page.selectOption(this.sortInventoryPath,select)
+        })
+    }
+
+    async checkSortResult(func,arr1,arr2){
+        await allure.step('Проверка сортировки', async() => {
+            expect(func(arr1, arr2)).toBe(true);
+        })
+    }
+
     async sortInventory(select, fieldCheck) {
-        await this.page.selectOption(this.sortInventoryPath,select)
-        let arrItems = [];
-        let sortArrItems = [];
-        for (let i = 0; i < await this.getCountItems(); i++){
-            arrItems.push(await fieldCheck.nth(i).textContent());
-        }
-        sortArrItems = arrItems;
-        sortArrItems.sort((a,b) => a.localeCompare(b));
+        await allure.step(`Сортировка и проверка результата`, async() => {
+            await this.changeTheSelectorInOptions(select);
+            let arrItems = [];
+            let sortArrItems = [];
+            let countItems = await this.getCountItems();
+            for (let i = 0; i < countItems; i++){
+                arrItems.push(await fieldCheck.nth(i).textContent());
+            }
+            sortArrItems = arrItems;
+            sortArrItems.sort((a,b) => a.localeCompare(b));
 
-        function arraysEqual(a, b) {
-            if (a.length !== b.length) return false;
-            return a.every((val, i) => val === b[i]);
-        }
+            function arraysEqual(a, b) {
+                if (a.length !== b.length) return false;
+                return a.every((val, i) => val === b[i]);
+            }
 
-        expect(arraysEqual(arrItems, sortArrItems)).toBe(true);
+            await this.checkSortResult(arraysEqual, arrItems, sortArrItems);
+        })
+
     }
 
     async sortAndCheckByName(){
-        await this.sortInventory('az',this.inventoryItemName);
+        await allure.step(`Провести сортировку по Имени по убыванию`, async() => {
+            await this.sortInventory('az',this.inventoryItemName);
+        })
+
     }
 
     async sortAndCheckByNameReverse() {
-        await this.sortInventory('za',this.inventoryItemName);
+        await allure.step(`Провести сортировку по Имени по возрастанию`, async() => {
+            await this.sortInventory('za',this.inventoryItemName);
+        })
+
     }
 
     async sortAndCheckByPrice(){
-        await this.sortInventory('lohi',this.inventoryItemPrice);
+        await allure.step(`Провести сортировку по цене по возрастанию`, async() => {
+            await this.sortInventory('lohi',this.inventoryItemPrice);
+        })
+
     }
 
     async sortAndCheckByPriceReverse() {
-        await this.sortInventory('hilo',this.inventoryItemPrice);
+        await allure.step(`Провести сортировку по цене по убыванию`, async() => {
+            await this.sortInventory('hilo',this.inventoryItemPrice);
+        })
+
     }
 
 

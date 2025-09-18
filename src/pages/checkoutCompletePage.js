@@ -1,4 +1,5 @@
 import {expect} from "@playwright/test";
+import {allure} from "allure-playwright";
 
 export class CheckoutCompletePage{
     constructor(page) {
@@ -9,23 +10,37 @@ export class CheckoutCompletePage{
     }
 
     async checkUrl(url){
-        await expect(this.page).toHaveURL(url);
+        await allure.step(`Проверить равен ли url-адрес страницы url - ${url}`, async() => {
+            await expect(this.page).toHaveURL(url);
+        })
     }
 
     async backToProductButtonClick(){
-        await this.backHomeButton.click();
+        await allure.step(`Нажать кнопку "Back Home"`, async() => {
+            await this.backHomeButton.click();
+        })
+
     }
 
     async checkCompleteHeaderText(text){
-        await expect(this.completeHeader).toHaveText(text);
+        await allure.step(`Проверить равен ли заголовок значению ${text}`, async() => {
+            await expect(this.completeHeader).toHaveText(text);
+        })
+
     }
 
     async checkCompleteText(text){
-        await expect(this.completeText).toHaveText(text);
+        await allure.step(`Проверить равен ли полный текст значению ${text}`, async() => {
+            await expect(this.completeText).toHaveText(text);
+        })
+
     }
 
     async checkAllCompleteTexts(text) {
-        await this.checkCompleteHeaderText(text.header);
-        await this.checkCompleteText(text.text);
+        await allure.step(`Проверка информационного сообщения с благодарностью за покупку`, async() => {
+            await this.checkCompleteHeaderText(text.header);
+            await this.checkCompleteText(text.text);
+        })
+
     }
 }

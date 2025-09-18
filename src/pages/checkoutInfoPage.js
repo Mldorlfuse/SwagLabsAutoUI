@@ -1,4 +1,5 @@
 import {expect} from "@playwright/test";
+import {allure} from "allure-playwright";
 
 export class CheckoutInfoPage {
     constructor(page) {
@@ -12,43 +13,66 @@ export class CheckoutInfoPage {
     }
 
     async checkUrl(url){
-        await expect(this.page).toHaveURL(url);
+        await allure.step(`Проверить равен ли url-адрес страницы url - ${url}`, async() => {
+            await expect(this.page).toHaveURL(url);
+        })
     }
 
     async fillFirstName(value){
-        await this.firstNameField.fill(value.firstName);
+        await allure.step(`Ввести firstname - ${value.firstName}`, async() => {
+            await this.firstNameField.fill(value.firstName);
+        })
+
     }
 
     async fillLastName(value){
-        await this.lastNameField.fill(value.lastName);
+        await allure.step(`Ввести lastname - ${value.lastName}`, async() => {
+            await this.lastNameField.fill(value.lastName);
+        })
+
     }
 
     async fillPostalCode(value){
-        await this.postalCodeField.fill(value.postalCode);
+        await allure.step(`Ввести postalcode - ${value.postalCode}`, async() => {
+            await this.postalCodeField.fill(value.postalCode);
+        })
+
     }
 
     async checkErrorMessage(message){
-        await expect(this.errorMessage).toHaveText(message);
+        await allure.step(`Проверить отображается ли сообщение об ошибке - ${message}`, async() => {
+            await expect(this.errorMessage).toHaveText(message);
+        })
+
     }
 
     async continueButtonClick(){
-        await this.continueButton.click();
+        await allure.step(`Нажать кнопку "Continue"`, async() => {
+            await this.continueButton.click();
+        })
+
     }
 
     async checkoutFillErrorMessageCheck(fillData, errorMessages) {
-        await this.continueButtonClick();
-        await this.checkErrorMessage(errorMessages.firstNameIsRequired);
-        await this.fillFirstName(fillData)
-        await this.continueButtonClick();
-        await this.checkErrorMessage(errorMessages.lastNameIsRequired);
-        await this.fillLastName(fillData);
-        await this.continueButtonClick();
-        await this.checkErrorMessage(errorMessages.postalCodeIsRequired);
+        await allure.step(`Проверить отображается ли ошибка при незаполнении каждого из полей`, async() => {
+            await this.continueButtonClick();
+            await this.checkErrorMessage(errorMessages.firstNameIsRequired);
+            await this.fillFirstName(fillData)
+            await this.continueButtonClick();
+            await this.checkErrorMessage(errorMessages.lastNameIsRequired);
+            await this.fillLastName(fillData);
+            await this.continueButtonClick();
+            await this.checkErrorMessage(errorMessages.postalCodeIsRequired);
+        })
+
     }
 
     async fillAllInputs(fillData){
-        await this.fillFirstName(fillData);
-        await this.fillLastName(fillData);
-        await this.fillPostalCode(fillData);
+        await allure.step(`Заполнить все поля`, async() => {
+            await this.fillFirstName(fillData);
+            await this.fillLastName(fillData);
+            await this.fillPostalCode(fillData);
+        })
+
     }
 }

@@ -1,4 +1,5 @@
 import {expect} from "@playwright/test";
+import { allure } from "allure-playwright";
 
 export class LoginPage {
     constructor(page) {
@@ -10,35 +11,54 @@ export class LoginPage {
     }
 
     async openPage(url){
-        await this.page.goto(url);
+        await allure.step(`Перейти по url - ${url}`, async() => {
+            await this.page.goto(url);
+        })
     }
 
     async fillUsername(user){
-        await this.usernameInput.fill(user.username);
+        await allure.step(`Ввести логин - ${user.username} `, async() => {
+            await this.usernameInput.fill(user.username);
+        })
     }
 
     async fillPassword(user) {
-        await this.passwordInput.fill(user.password);
+        await allure.step(`Ввести пароль - ${user.password} `, async() => {
+            await this.passwordInput.fill(user.password);
+        })
+
     }
 
     async clickLoginButton() {
-        await this.loginButton.click();
+        await allure.step(`Нажать кнопку "Login"`, async() => {
+            await this.loginButton.click();
+        })
+
     }
 
     async checkErrorMessage(user){
-        await expect(this.errorMessage).toHaveText(user.errorMessage);
+        await allure.step(`Проверить отображается ли сообщение об ошибке - ${user.errorMessage} `, async() => {
+            await expect(this.errorMessage).toHaveText(user.errorMessage);
+        })
+
     }
 
     async Login(url, user) {
-       await this.openPage(url);
-       await this.fillUsername(user);
-       await this.fillPassword(user);
-       await this.clickLoginButton(user);
+        await allure.step(`Авторизация`, async() => {
+            await this.openPage(url);
+            await this.fillUsername(user);
+            await this.fillPassword(user);
+            await this.clickLoginButton(user);
+        })
+
     }
 
     async LoginAndCheckErrorMessage(url, user){
-        await this.Login(url, user);
-        await this.checkErrorMessage(user);
+        await allure.step(`Авторизация и проверка ошибки`, async() => {
+            await this.Login(url, user);
+            await this.checkErrorMessage(user);
+        })
+
     }
 
 

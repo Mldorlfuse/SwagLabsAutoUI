@@ -44,6 +44,7 @@ test.describe("UI тесты @UI", () => {
         for (let i = 0; i < countItems; i++) {
             resultRandomItems.push(ArrNumbers[i]);
         }
+
     })
 
     test("Добавление и удаление элементов из корзины с главной страницы", async ({loginFixture, webApp}) => {
@@ -92,27 +93,27 @@ test.describe("UI тесты @UI", () => {
 
         await webApp.inventoryPage.addToCartOneItem(countItems - 1);
         fieldsOfItem = await webApp.inventoryPage.getFieldsOfItem(countItems - 1);
-        await webApp.header.checkCountItems(1);
+        await webApp.header.checkCountCart(1);
         await webApp.header.openShoppingCart();
 
         await webApp.cartPage.checkUrl(urls.cartPageUrl);
-        await webApp.header.checkCountItems(1);
+        await webApp.header.checkCountCart(1);
         await webApp.cartPage.checkFieldsOfItem(fieldsOfItem);
         await webApp.cartPage.checkoutButtonClick();
 
         await webApp.checkoutInfoPage.checkUrl(urls.checkoutInfoPageUrl);
-        await webApp.header.checkCountItems(1);
+        await webApp.header.checkCountCart(1);
         await webApp.checkoutInfoPage.fillAllInputs(checkoutData);
         await webApp.checkoutInfoPage.continueButtonClick();
 
         await webApp.checkoutFinishPage.checkUrl(urls.checkoutFinishPageUrl);
-        await webApp.header.checkCountItems(1);
+        await webApp.header.checkCountCart(1);
         await webApp.checkoutFinishPage.checkAllFieldsItem(fieldsOfItem);
         await webApp.checkoutFinishPage.checkSubtotalPrice(fieldsOfItem.price);
         await webApp.checkoutFinishPage.finishButtonClick();
 
         await webApp.checkoutCompletePage.checkUrl(urls.checkoutCompletedPageUrl);
-        await webApp.header.checkCountItems(1);
+        await webApp.header.checkEmptyCart();
         await webApp.checkoutCompletePage.checkAllCompleteTexts(checkoutCompleteDataFields);
         await webApp.checkoutCompletePage.backToProductButtonClick();
 
@@ -131,7 +132,7 @@ test.describe("UI тесты @UI", () => {
         await webApp.checkoutCompletePage.backToProductButtonClick();
     })
 
-    test('Фильтрация', async ({loginFixture, webApp}) => {
+    test('Фильтрация элементов на главной странице', async ({loginFixture, webApp}) => {
         await loginFixture;
 
         await webApp.inventoryPage.sortAndCheckByNameReverse();
