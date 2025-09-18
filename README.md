@@ -18,6 +18,7 @@
 ### 1. Клонировать репозиторий
 ```
 git clone https://github.com/Mldorlfuse/SwagLabsAutoUI.git
+
 cd SwagLabsAutoUI
 ```
 
