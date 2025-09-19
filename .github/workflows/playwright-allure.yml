@@ -22,9 +22,12 @@ jobs:
 
         
       - name: Install dependencies
-        run: npm i
+        run: npm сi
       - name: Install Playwirght  
         run: npx playwright install --with-deps
+
+      - name: Install Allure CLI
+        run: npm install --save-dev allure-commandline@2.25.0
 
       - name: Run Playwright tests
         run: npx playwright test
