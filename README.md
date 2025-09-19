@@ -184,5 +184,5 @@ jobs:
           name: allure-report
           path: allure-report
 ```
-
+![githubActions](screenshots/GithubActions.png)
 
